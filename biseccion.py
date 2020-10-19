@@ -6,6 +6,7 @@ import numpy as np
 # Importar módulo para el uso de matemáticas simbólicas
 import sympy as sp
 
+    
 # # # # # # # OBTENCIÓN DE ECUACIÓN # # # # # # # 
 # Definición de la variable simbólica
 # Ingresar que variable (en str) se va a utilizar como simbólica
@@ -38,17 +39,38 @@ y = sp.sympify(equa)
 # # # # # # # MOSTRAR LOS DATOS INGRESADOS # # # # # # # 
 # Se le muestra al usuario la gráfica de la función junto con la función
 # Mostrar la función de forma "bonita"
-sp.pretty_print(y)
+print(y)
 # Aquí se crea la etiqueta del eje y como f(variable)
 ejey = 'f(' + variable + ')'
 # Mostrar la gráfica
-sp.plotting.plot(y, xlabel = variable, ylabel = ejey)
+# sp.plotting.plot(y, xlabel = variable, ylabel = ejey)
 
+# EN CASO DE QUE LA GRÁFICA CON SYMPY NO FUNCIONE
+# Crear el intervalo de graficación
+# TODO: Modificar que se muestre de manera automática
+# un amplio intervalo para mostrar las posibles raíces
+x1 = np.arange(0,20,0.1)
+# Generar una lista con las evaluaciones de la función
+''' Esto es muy similar a utilizar lo siguiente:
+    y1 = []
+    for tmp in x1:
+        y1.append(float(y.subs(x,tmp).evalf()))
+    Pero en una sola línea
+'''
+y1 = [float(y.subs(x,tmp).evalf()) for tmp in x1]
+# Una vez realizado esto, mostrar la gráfica
+plt.plot(x1, y1)
+plt.xlabel('c')
+plt.ylabel(ejey)
+plt.grid()
+plt.show()
+
+#%%
 # # # # # # # INGRESAR EL INTERVALO DE BÚSQUEDA # # # # # # # 
 # Una vez que ya se tiene la gráfica, entonces el usuario ya es capaz de
 # decidir el intervalo donde se iniciará la búsqueda
 while True:
-    # Pedir los valores de [a, b]
+    # Pedir los valores de [a, b] [xl, xu]
     a = float(input('Ingresar límite inferior a: '))
     b = float(input('Ingresar límite inferior b (> a): '))
     # Verificar que a < b y además f(a)f(b) < 0 (esto es, hay una raíz
