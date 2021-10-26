@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 26 14:07:10 2021
+
+@author: ixnightroad
+"""
+
+import numpy as np
+import matplotlib.pyplot as mp
+import GaussSeidel as gs
+
+# TODO: Cambiar a leer por un archivo CSV
+
+# Estos son los datos a analizar
+# Estos datos se ajustan mejor a un polinomio
+x = np.array([0,1,2,3,4,5], dtype="float")
+y = np.array([2.1,7.7,13.6,27.2,40.9,61.1], dtype="float")
+
+# Armar y Mostrar la gráfica
+# Esto solamente muestra los puntos de los datos
+mp.plot(x, y, "r.")
+# Títulos de los ejes
+mp.xlabel("x")
+mp.ylabel("y")
+# Se coloca una rejilla en la gráfica
+mp.grid()
+# Mostrar la gráfica
+mp.show()
+
+
+# TODO: Que el valor del polinomio a analizar sea de 1 a 8
+m = 2
+
+# TODO: Automatizar la generación de datos y la creación de la matriz
+# y el vector
+# Calcular todos los datos a ingresar a la matriz
+n = len(x)
+
+sumX = sum(x)
+sumX2 = sum(x**2)
+sumX3 = sum(x**3)
+sumX4 = sum(x**4)
+
+sumX0Y = sum((x**0)*y)
+sumX1Y = sum((x**1)*y)
+sumX2Y = sum((x**2)*y)
+
+medX = sumX / n
+medY = sumX0Y / n
+
+# Con estos datos se genera la matriz y el vector
+A = np.array([[n,sumX,sumX2],
+     [sumX,sumX2,sumX3],
+     [sumX2,sumX3,sumX4]], dtype="float")
+b = np.array([sumX0Y, sumX1Y, sumX2Y], dtype="float")
+
+# Enviar la información al programa de solución y obtener los resultados
+# TODO: Ajustar los dígitos de precisión en caso de usar Gauss-Seidel
+coef = gs.GaussSeidel(A, b, 9, True)
+
+# Con estos coeficientes se obtiene la ecuación
+yPred = coef[0] + coef[1] * x + coef[2] * x**2
+
+# Bondades del ajuste
+Sr = sum((y - yPred)**2)
+St = sum((y - medY)**2)
+Syx = np.sqrt( Sr/(n-(m+1)) )
+r2 = (St - Sr)/St
+r = np.sqrt(r2)
+
+print("Bondad del ajuste")
+print("r = {:}".format(round(r,9)))
+print("Sr = {:}".format(round(Sr,9)))
+print("Sy/x = {:}".format(round(Syx,9)))
+
+# Graficar los datos y los valores predichos
+mp.plot(x, y, 'r.')
+mp.plot(x, yPred, 'b-')
+mp.xlabel('x')
+mp.ylabel('y')
+mp.grid()
+mp.show()
