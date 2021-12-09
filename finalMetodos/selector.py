@@ -9,12 +9,12 @@ import tkinter as tk
 from tkinter import ttk
 
 class App():
-    def __init__(self, datos):
+    def __init__(self, datos, encabezado):
         self.root = tk.Tk()
         # Tamaño de la ventana
         self.root.geometry('200x100')
         
-        self.labelTop = tk.Label(self.root, text = "Seleccione un país")
+        self.labelTop = tk.Label(self.root, text = encabezado)
         self.labelTop.grid(column=0, row=0)
         # Mostrar los datos a seleccionar
         self.comboP = ttk.Combobox(self.root, values = datos)
