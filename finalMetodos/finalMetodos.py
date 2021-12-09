@@ -8,9 +8,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+# Librerías nuestras
 import regresion as rs
+import integraNumerico as inum
+import selector
 
-# Cargar la información en Python
+# Cargar la información en Python directamente de la web, desde el archivo CSV
 df = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
 
 # Obtener los nombres de las columnas
@@ -20,10 +23,12 @@ nombreColumnas = list(df.columns)
 paises = list( df["location"].unique() )
 
 
-#%%
-# Obtener los datos de un solo país en particular
+# Generar el cuadro de diálogo para seleccionar el país
+app = selector.App(paises)
+print(app.respuesta)
 
-particular = df[ df["location"] == 'Mexico' ].fillna(0)
+# Obtener los datos de un solo país en particular
+particular = df[ df["location"] == app.respuesta ].fillna(0)
 
 #%%
 
@@ -33,11 +38,11 @@ fechas = particular["date"].tolist()
 x = np.array([tmp for tmp in range(len(fechas))])
 # Obtener los casos totales de Coronavirus
 casosTotales = np.array(particular["total_cases"])
+nuevosCasos = np.array(particular["new_cases"])
 
 #%%
 # Graficar con los números
-plt.plot(fechas, casosTotales, 'b-')
-plt.xticks(ticks = fechas[::50], rotation=80)
+plt.plot(casosTotales, 'g-')
 plt.grid()
 plt.show()
 
@@ -66,10 +71,9 @@ print("Crecimiento: {}".format(coef[1]))
 # utiliza degrees para obtener el valor en grados
 print("Ángulo: {}°".format(np.degrees(np.arctan(coef[1]))))
 
+#%%
+## Integración numérica
 
-
-
-
-
+total = inum.trapecio(x[:366], nuevosCasos[:366])
 
 
